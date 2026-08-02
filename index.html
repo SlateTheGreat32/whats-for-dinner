@@ -258,6 +258,140 @@
     padding: 12px 0 0;
     display: none;
   }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .diff-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .diff-dot.plan-dot {
+    margin-left: 2px;
+  }
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+  .star {
+    background: none;
+    border: none;
+    padding: 2px;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--card-border);
+  }
+  .star.filled { color: var(--accent); }
+  .meal-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .heart-btn {
+    background: none;
+    border: none;
+    font-size: 1.15rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .chip.fav-toggle.active {
+    background: #d6336c;
+    border-color: #d6336c;
+  }
+  #leftovers-list {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+  #leftovers-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--divider);
+    font-size: 0.92rem;
+  }
+  #leftovers-list li:last-child { border-bottom: none; }
+  #leftovers-list .clear-btn {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  #no-leftovers {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  #leftover-form {
+    display: none;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  #leftover-form.open { display: flex; }
+  #leftover-form select, #leftover-form input {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1.5px solid var(--card-border);
+    background: var(--bg);
+    color: var(--text);
+  }
+  #leftover-form select { flex: 1; min-width: 0; }
+  #leftover-form input { width: 60px; }
+  .stat-row {
+    margin-bottom: 12px;
+  }
+  .stat-row:last-child { margin-bottom: 0; }
+  .stat-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stat-count { color: var(--muted); font-weight: 700; }
+  .stat-bar-bg {
+    height: 7px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  }
+  #untried {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--divider);
+  }
+  #untried p {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
 </style>
 </head>
 <body>
@@ -292,9 +426,32 @@
   </section>
 
   <section>
+    <p class="eyebrow">Track</p>
+    <h2>Leftovers</h2>
+    <ul id="leftovers-list"></ul>
+    <p id="no-leftovers">No leftovers logged.</p>
+    <button class="secondary" id="add-leftover-btn">+ Log Leftovers</button>
+    <div id="leftover-form">
+      <select id="leftover-meal"></select>
+      <input type="number" id="leftover-servings" min="1" value="2" aria-label="Servings">
+      <button class="primary" id="save-leftover-btn" style="flex: 0 0 auto; padding: 9px 16px;">Save</button>
+    </div>
+  </section>
+
+  <section>
     <p class="eyebrow">Reference</p>
     <h2>All Meals</h2>
     <ul id="all-meals"></ul>
+  </section>
+
+  <section>
+    <p class="eyebrow">Insights</p>
+    <h2>Rotation Stats</h2>
+    <div id="stats"></div>
+    <div id="untried">
+      <p>Haven't tried in a plan yet</p>
+      <div class="chips" id="untried-chips"></div>
+    </div>
   </section>
 </main>
 
