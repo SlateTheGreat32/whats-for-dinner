@@ -4,43 +4,79 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>What's for Dinner?</title>
-<meta name="theme-color" content="#e65100">
+<meta name="theme-color" content="#c1440e" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEHklEQVR4nO3VsY7cSBAFwf1F/b8v+8zzJPcOEAStlmRVM8MIf9ivEvPx/dvHD6j6mP4BMEkApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAngAT/+/eevTf/2txPAhb5y6MKYIYAvePLgBXEPAXzS9KGL4VoC+EPTRy2EewjgN6YPWAz3E8AvTB+rEJ4jgP+YPk4hPE8AscMXggAcvwgEMH10G01vIgDHP256GwE4/BWmtxKA4x83vZkAHP+46e0E4PjHTW8oAMc/bnpLATj+cdObCsDxj5veVgCOf9z0xgJw/OOmtxaA4x83vbkAHP+46e3zAUwfwJWHM/2bihEcHcD08E8exvS3vDUCARx4CNPfKIAFpgffMv70t295h1QA00NvHHz6LTa+iQCCI3ublwdgYG+UDcCo3utqAnjRmN7s844JwJDe7g4COHxA7/c1RwRgPO94FwEcOJq3vM76AAzmTe8kgEOG8q73EMABI3nb+6wOwEDe+G4CWDyON77f2gDqw3jrZ6QDmP7GTarvLQDS770ygOoY04rvLgDS754MYPr7Nqu9vQBIv/26AIp/w5vU3j8XwPT3naC0gQBIbyAA0hukApj+tpNUdhAA6R1WBVD6692usoUASG8hANJbCID0FgIgvUUmgOlvO1FhDwGQ3kMApPcQAOk9BEB6j0wAmx79BJUtBEB6CwGQ3kIApLcQAOktVgVw98NPf9tJKjsIgPQOqQC2Pf5WpQ0EQHoDAZDeIBfAtgG2qb3/ugCeGGH6+zarvb0ASL99MoCNQ2xQfHcBkH73lQFUx/DezxMA6fdOB7B1FG/9nLUB1Ifxxs8QwOJxvPH9VgdgIG97NwEcMpR3vYcADhrLm15vfQAG85Z3EsChw3nHaxwRgPG8310E8IIRvd3fOyYAQ3qzOwjgZYN6rxcHMD3qKcN6oxcHYGBvI4DhkTeOPf0WG9/ktQFsGnx69Olv3/IOuQC2jf/kEUx/41uOXwAHHcX0twhgqenhrzyY6d9UO/5XBHDy4bzB9PYCEIHjF4AIHL8AROD4BSACx58PQASOPx+ACBx/PgAROP58ACJw/PkAROD48wGIwPHnAxCCwxeACBy/AIRQP3wBiCB//N8F8H/Tx+jwnyeAX5g+Tof/HAH8xvSxOvz7CeAPTR+wo7+HAD5p+qgd/rUE8AXTh+7ov04AF3Lw5xHAAxz6XgIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCk/QTClZrz+ICLhQAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fff8f0;
+    --bg: #faf6f1;
     --card: #ffffff;
-    --accent: #e65100;
-    --accent-light: #ffe0b2;
-    --text: #3d2b1f;
-    --muted: #8a7566;
+    --card-border: #ece1d4;
+    --accent: #c1440e;
+    --accent-2: #e8703a;
+    --accent-soft: #f6e3d4;
+    --text: #2b2320;
+    --muted: #8a7a6d;
+    --shadow: rgba(193, 68, 14, 0.10);
+    --divider: #f1e6d9;
   }
-  * { box-sizing: border-box; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171310;
+      --card: #221d19;
+      --card-border: #362d27;
+      --accent: #ff8a50;
+      --accent-2: #ff9d6b;
+      --accent-soft: #3a2a20;
+      --text: #f3ece4;
+      --muted: #b3a394;
+      --shadow: rgba(0, 0, 0, 0.35);
+      --divider: #33291f;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding-bottom: 40px;
+    padding-bottom: 48px;
+    transition: background 0.2s, color 0.2s;
   }
   header {
-    padding: 28px 20px 20px;
+    padding: 36px 20px 22px;
     text-align: center;
+    position: relative;
   }
+  .badge {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px;
+    border-radius: 16px;
+    background: linear-gradient(160deg, var(--accent-2), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px var(--shadow);
+  }
+  .badge svg { width: 28px; height: 28px; }
   header h1 {
     font-family: 'Fredoka', sans-serif;
-    font-size: 1.9rem;
+    font-weight: 600;
+    font-size: 1.7rem;
     margin: 0 0 4px;
-    color: var(--accent);
+    letter-spacing: -0.02em;
   }
   header p {
     margin: 0;
     color: var(--muted);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
+    font-weight: 600;
   }
   main {
     max-width: 480px;
@@ -49,15 +85,26 @@
   }
   section {
     background: var(--card);
-    border-radius: 18px;
-    padding: 18px;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 16px rgba(230, 81, 0, 0.08);
+    box-shadow: 0 6px 24px var(--shadow);
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 4px;
   }
   section h2 {
     font-family: 'Fredoka', sans-serif;
-    font-size: 1.1rem;
-    margin: 0 0 12px;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
   }
   .chips {
     display: flex;
@@ -65,49 +112,68 @@
     gap: 8px;
   }
   .chip {
-    border: 2px solid var(--accent-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1.5px solid var(--card-border);
     background: var(--bg);
     color: var(--text);
     padding: 8px 14px;
     border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.87rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: transform 0.12s ease, background 0.15s, border-color 0.15s, color 0.15s;
     text-transform: capitalize;
+    -webkit-user-select: none;
+    user-select: none;
   }
+  .chip:active { transform: scale(0.95); }
   .chip.active {
     background: var(--accent);
     border-color: var(--accent);
-    color: white;
+    color: #fff;
   }
+  .chip .check {
+    display: none;
+    font-size: 0.8em;
+  }
+  .chip.active .check { display: inline; }
   .btn-row {
     display: flex;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 16px;
   }
   button.primary {
     flex: 1;
-    background: var(--accent);
+    background: linear-gradient(160deg, var(--accent-2), var(--accent));
     color: white;
     border: none;
-    padding: 14px;
+    padding: 15px;
     border-radius: 14px;
     font-size: 1rem;
     font-weight: 700;
     font-family: 'Fredoka', sans-serif;
     cursor: pointer;
+    box-shadow: 0 6px 18px var(--shadow);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  button.primary:active { transform: scale(0.98); }
+  button.primary:active {
+    transform: scale(0.97);
+    box-shadow: 0 3px 10px var(--shadow);
+  }
   button.secondary {
-    background: var(--bg);
+    background: transparent;
     color: var(--accent);
-    border: 2px solid var(--accent-light);
-    padding: 10px 16px;
+    border: 1.5px solid var(--card-border);
+    padding: 10px 18px;
     border-radius: 14px;
     font-weight: 700;
+    font-family: 'Fredoka', sans-serif;
     cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.15s;
   }
+  button.secondary:active { transform: scale(0.97); }
   #plan-list {
     list-style: none;
     margin: 0;
@@ -116,56 +182,80 @@
   #plan-list li {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #f1e4d5;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--divider);
   }
   #plan-list li:last-child { border-bottom: none; }
-  .day-label {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 0.85rem;
-    color: var(--muted);
-    width: 48px;
+  .day-badge {
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
+    border-radius: 11px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: -0.01em;
   }
   .meal-name {
     flex: 1;
     font-weight: 700;
-    padding: 0 8px;
+    font-size: 0.98rem;
   }
   .reroll {
     background: none;
     border: none;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     cursor: pointer;
     color: var(--muted);
-    padding: 4px 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: background 0.15s;
   }
+  .reroll:active { background: var(--accent-soft); }
   #all-meals {
     list-style: none;
     margin: 0;
     padding: 0;
   }
   #all-meals li {
-    padding: 10px 0;
-    border-bottom: 1px solid #f1e4d5;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--divider);
   }
   #all-meals li:last-child { border-bottom: none; }
   #all-meals .meal-name {
     font-weight: 700;
     padding: 0;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    font-size: 0.98rem;
   }
   #all-meals .tags {
-    font-size: 0.8rem;
-    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
   }
-  #all-meals li.dimmed { opacity: 0.35; }
+  #all-meals .tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: capitalize;
+  }
+  #all-meals li.dimmed { opacity: 0.32; }
   #empty-state {
     text-align: center;
     color: var(--muted);
-    padding: 12px 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 12px 0 0;
     display: none;
   }
 </style>
@@ -173,17 +263,25 @@
 <body>
 
 <header>
-  <h1>🍽️ What's for Dinner?</h1>
+  <div class="badge">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 2v7M4 2v5a1 1 0 001 1h0M10 2v5a1 1 0 01-1 1h0M7 10v12" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M17 2c-2 1-3 3-3 6 0 2 1 3 2 3.5V22" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>What's for Dinner?</h1>
   <p>Pick a mood, plan the week.</p>
 </header>
 
 <main>
   <section>
+    <p class="eyebrow">Step 1</p>
     <h2>Mood</h2>
     <div class="chips" id="mood-chips"></div>
   </section>
 
   <section>
+    <p class="eyebrow">Step 2</p>
     <h2>This Week's Plan</h2>
     <ul id="plan-list"></ul>
     <p id="empty-state">No meals match that mood combo — clear a filter.</p>
@@ -194,6 +292,7 @@
   </section>
 
   <section>
+    <p class="eyebrow">Reference</p>
     <h2>All Meals</h2>
     <ul id="all-meals"></ul>
   </section>

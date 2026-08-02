@@ -76,7 +76,7 @@ function renderMoodChips() {
   MOODS.forEach(mood => {
     const chip = document.createElement("button");
     chip.className = "chip" + (activeMoods.has(mood) ? " active" : "");
-    chip.textContent = mood;
+    chip.innerHTML = `<span class="check">✓</span><span>${mood}</span>`;
     chip.onclick = () => {
       if (activeMoods.has(mood)) activeMoods.delete(mood);
       else activeMoods.add(mood);
@@ -95,7 +95,7 @@ function renderPlan() {
   currentPlan.forEach((name, i) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <span class="day-label">${DAYS[i]}</span>
+      <span class="day-badge">${DAYS[i]}</span>
       <span class="meal-name">${name}</span>
       <button class="reroll" title="Swap this meal">🔄</button>
     `;
@@ -111,9 +111,10 @@ function renderAllMeals() {
   MEALS.forEach(meal => {
     const li = document.createElement("li");
     if (activeMoods.size > 0 && !pool.has(meal.name)) li.className = "dimmed";
+    const tags = meal.moods.map(m => `<span class="tag">${m}</span>`).join("");
     li.innerHTML = `
       <span class="meal-name">${meal.name}</span>
-      <span class="tags">${meal.moods.join(" · ")}</span>
+      <span class="tags">${tags}</span>
     `;
     list.appendChild(li);
   });

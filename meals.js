@@ -41,6 +41,22 @@ const MEALS = [
     name: "Baked Ziti",
     moods: ["comfort", "hearty", "indulgent"],
   },
+  {
+    name: "Grilled Salmon w/ Veggies",
+    moods: ["healthy", "light", "fresh", "fancy"],
+  },
+  {
+    name: "Shrimp Scampi",
+    moods: ["fancy", "light", "fresh"],
+  },
+  {
+    name: "Steak w/ Roasted Potatoes",
+    moods: ["fancy", "hearty", "indulgent"],
+  },
+  {
+    name: "Chicken Caesar Salad",
+    moods: ["healthy", "light", "fresh", "quick"],
+  },
 ];
 
 // Moods shown as filter chips, in display order.
