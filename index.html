@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>What's for Dinner?</title>
+<meta name="theme-color" content="#e65100">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEHklEQVR4nO3VsY7cSBAFwf1F/b8v+8zzJPcOEAStlmRVM8MIf9ivEvPx/dvHD6j6mP4BMEkApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAngAT/+/eevTf/2txPAhb5y6MKYIYAvePLgBXEPAXzS9KGL4VoC+EPTRy2EewjgN6YPWAz3E8AvTB+rEJ4jgP+YPk4hPE8AscMXggAcvwgEMH10G01vIgDHP256GwE4/BWmtxKA4x83vZkAHP+46e0E4PjHTW8oAMc/bnpLATj+cdObCsDxj5veVgCOf9z0xgJw/OOmtxaA4x83vbkAHP+46e3zAUwfwJWHM/2bihEcHcD08E8exvS3vDUCARx4CNPfKIAFpgffMv70t295h1QA00NvHHz6LTa+iQCCI3ublwdgYG+UDcCo3utqAnjRmN7s844JwJDe7g4COHxA7/c1RwRgPO94FwEcOJq3vM76AAzmTe8kgEOG8q73EMABI3nb+6wOwEDe+G4CWDyON77f2gDqw3jrZ6QDmP7GTarvLQDS770ygOoY04rvLgDS754MYPr7Nqu9vQBIv/26AIp/w5vU3j8XwPT3naC0gQBIbyAA0hukApj+tpNUdhAA6R1WBVD6692usoUASG8hANJbCID0FgIgvUUmgOlvO1FhDwGQ3kMApPcQAOk9BEB6j0wAmx79BJUtBEB6CwGQ3kIApLcQAOktVgVw98NPf9tJKjsIgPQOqQC2Pf5WpQ0EQHoDAZDeIBfAtgG2qb3/ugCeGGH6+zarvb0ASL99MoCNQ2xQfHcBkH73lQFUx/DezxMA6fdOB7B1FG/9nLUB1Ifxxs8QwOJxvPH9VgdgIG97NwEcMpR3vYcADhrLm15vfQAG85Z3EsChw3nHaxwRgPG8310E8IIRvd3fOyYAQ3qzOwjgZYN6rxcHMD3qKcN6oxcHYGBvI4DhkTeOPf0WG9/ktQFsGnx69Olv3/IOuQC2jf/kEUx/41uOXwAHHcX0twhgqenhrzyY6d9UO/5XBHDy4bzB9PYCEIHjF4AIHL8AROD4BSACx58PQASOPx+ACBx/PgAROP58ACJw/PkAROD48wGIwPHnAxCCwxeACBy/AIRQP3wBiCB//N8F8H/Tx+jwnyeAX5g+Tof/HAH8xvSxOvz7CeAPTR+wo7+HAD5p+qgd/rUE8AXTh+7ov04AF3Lw5xHAAxz6XgIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCk/QTClZrz+ICLhQAAAABJRU5ErkJggg==">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8f0;
+    --card: #ffffff;
+    --accent: #e65100;
+    --accent-light: #ffe0b2;
+    --text: #3d2b1f;
+    --muted: #8a7566;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 40px;
+  }
+  header {
+    padding: 28px 20px 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.9rem;
+    margin: 0 0 4px;
+    color: var(--accent);
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  section {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(230, 81, 0, 0.08);
+  }
+  section h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    border: 2px solid var(--accent-light);
+    background: var(--bg);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: capitalize;
+  }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  button.primary {
+    flex: 1;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+  }
+  button.primary:active { transform: scale(0.98); }
+  button.secondary {
+    background: var(--bg);
+    color: var(--accent);
+    border: 2px solid var(--accent-light);
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  #plan-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #plan-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1e4d5;
+  }
+  #plan-list li:last-child { border-bottom: none; }
+  .day-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    width: 48px;
+    flex-shrink: 0;
+  }
+  .meal-name {
+    flex: 1;
+    font-weight: 700;
+    padding: 0 8px;
+  }
+  .reroll {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px 8px;
+  }
+  #all-meals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #all-meals li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f1e4d5;
+  }
+  #all-meals li:last-child { border-bottom: none; }
+  #all-meals .meal-name {
+    font-weight: 700;
+    padding: 0;
+    display: block;
+    margin-bottom: 4px;
+  }
+  #all-meals .tags {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  #all-meals li.dimmed { opacity: 0.35; }
+  #empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 12px 0;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ What's for Dinner?</h1>
+  <p>Pick a mood, plan the week.</p>
+</header>
+
+<main>
+  <section>
+    <h2>Mood</h2>
+    <div class="chips" id="mood-chips"></div>
+  </section>
+
+  <section>
+    <h2>This Week's Plan</h2>
+    <ul id="plan-list"></ul>
+    <p id="empty-state">No meals match that mood combo — clear a filter.</p>
+    <div class="btn-row">
+      <button class="primary" id="plan-btn">Plan My Week</button>
+      <button class="secondary" id="surprise-btn">Surprise Me</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>All Meals</h2>
+    <ul id="all-meals"></ul>
+  </section>
+</main>
+
+<script src="meals.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
