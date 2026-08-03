@@ -338,7 +338,11 @@ function showSignedIn() {
 }
 
 document.getElementById("google-signin-btn").onclick = () => {
-  signInWithRedirect(auth, new GoogleAuthProvider());
+  signinError.style.display = "none";
+  signInWithRedirect(auth, new GoogleAuthProvider()).catch(err => {
+    signinError.textContent = `Sign-in failed: ${err.message}`;
+    signinError.style.display = "block";
+  });
 };
 document.getElementById("signout-btn").onclick = () => signOut(auth);
 
