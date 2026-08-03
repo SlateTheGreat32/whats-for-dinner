@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
 import {
-  getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult,
+  getAuth, GoogleAuthProvider, signInWithPopup,
   onAuthStateChanged, signOut,
 } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
 import {
@@ -339,7 +339,8 @@ function showSignedIn() {
 
 document.getElementById("google-signin-btn").onclick = () => {
   signinError.style.display = "none";
-  signInWithRedirect(auth, new GoogleAuthProvider()).catch(err => {
+  signInWithPopup(auth, new GoogleAuthProvider()).catch(err => {
+    if (err.code === "auth/cancelled-popup-request" || err.code === "auth/popup-closed-by-user") return;
     signinError.textContent = `Sign-in failed: ${err.message}`;
     signinError.style.display = "block";
   });
@@ -347,10 +348,6 @@ document.getElementById("google-signin-btn").onclick = () => {
 document.getElementById("signout-btn").onclick = () => signOut(auth);
 
 let unsubscribeSnapshot = null;
-
-getRedirectResult(auth).catch(err => {
-  showSignedOut(`Sign-in failed: ${err.message}`);
-});
 
 onAuthStateChanged(auth, user => {
   if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
