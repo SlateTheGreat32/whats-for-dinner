@@ -393,6 +393,18 @@
     margin: 0 0 8px;
   }
 
+  #debug-banner {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: #d64545;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 10px 14px;
+    z-index: 200;
+    word-break: break-word;
+  }
   #signin-overlay {
     position: fixed;
     inset: 0;
@@ -438,6 +450,22 @@
 </style>
 </head>
 <body>
+
+<div id="debug-banner"></div>
+<script>
+  function showDebug(msg) {
+    var el = document.getElementById('debug-banner');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  window.addEventListener('error', function (e) {
+    showDebug('Error: ' + e.message + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : ''));
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var reason = e.reason;
+    showDebug('Unhandled: ' + (reason && reason.message ? reason.message : String(reason)));
+  });
+</script>
 
 <div id="signin-overlay">
   <div class="signin-card">
