@@ -65,6 +65,14 @@
     box-shadow: 0 8px 20px var(--shadow);
   }
   .badge svg { width: 28px; height: 28px; }
+  .household-name {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
   header h1 {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
@@ -393,6 +401,54 @@
     margin: 0 0 8px;
   }
 
+  #grocery-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #grocery-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  #grocery-list li:last-child { border-bottom: none; }
+  #grocery-list input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  #grocery-list label {
+    font-size: 0.94rem;
+    font-weight: 600;
+  }
+  #grocery-list li.have label {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  #no-groceries {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0;
+    display: none;
+  }
+
+  .day-select {
+    flex: 1;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
   #debug-banner {
     display: none;
     position: fixed;
@@ -475,6 +531,7 @@
         <path d="M17 2c-2 1-3 3-3 6 0 2 1 3 2 3.5V22" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
+    <p class="household-name">Nosakhere Hunter's</p>
     <h1>What's for Dinner?</h1>
     <p>Sign in to sync your household's plan.</p>
     <button class="primary" id="google-signin-btn">Sign in with Google</button>
@@ -490,6 +547,7 @@
       <path d="M17 2c-2 1-3 3-3 6 0 2 1 3 2 3.5V22" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
+  <p class="household-name">Nosakhere Hunter's</p>
   <h1>What's for Dinner?</h1>
   <p>Pick a mood, plan the week.</p>
 </header>
@@ -510,6 +568,13 @@
       <button class="primary" id="plan-btn">Plan My Week</button>
       <button class="secondary" id="surprise-btn">Surprise Me</button>
     </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Step 3</p>
+    <h2>Grocery List</h2>
+    <ul id="grocery-list"></ul>
+    <p id="no-groceries">Plan your week to build a grocery list.</p>
   </section>
 
   <section>

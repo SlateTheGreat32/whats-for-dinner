@@ -31,6 +31,7 @@ let favorites = new Set();
 let ratings = {};   // name -> 1..5
 let leftovers = []; // { id, name, servings, loggedAt }
 let history = {};   // name -> times planned
+let pantry = {};    // ingredient name -> true if already have it at home
 let applyingRemote = false; // true while an incoming snapshot is being applied
 
 function stateFromSnapshot(data) {
@@ -42,9 +43,11 @@ function stateFromSnapshot(data) {
   ratings = data.ratings || {};
   leftovers = data.leftovers || [];
   history = data.history || {};
+  pantry = data.pantry || {};
   if (currentPlan.length !== 7) pickWeek();
   renderMoodChips();
   renderPlan();
+  renderGroceryList();
   renderLeftoverSelect();
   renderLeftovers();
   renderAllMeals();
@@ -63,6 +66,7 @@ function saveState() {
     ratings,
     leftovers,
     history,
+    pantry,
   }).catch(err => console.error("Sync write failed:", err));
 }
 
@@ -116,6 +120,16 @@ function rerollDay(index) {
   recordHistory(choice.name);
   saveState();
   renderPlan();
+  renderGroceryList();
+  renderStats();
+}
+
+function setDay(index, name) {
+  currentPlan[index] = name;
+  recordHistory(name);
+  saveState();
+  renderPlan();
+  renderGroceryList();
   renderStats();
 }
 
@@ -199,14 +213,57 @@ function renderPlan() {
   list.innerHTML = "";
   currentPlan.forEach((name, i) => {
     const meal = mealByName(name);
+    const options = MEALS.map(m =>
+      `<option value="${m.name}"${m.name === name ? " selected" : ""}>${m.name}</option>`
+    ).join("");
     const li = document.createElement("li");
     li.innerHTML = `
       <span class="day-badge">${DAYS[i]}</span>
-      <span class="meal-name">${name}</span>
+      <select class="day-select">${options}</select>
       ${meal ? diffDot(meal) : ""}
-      <button class="reroll" title="Swap this meal">🔄</button>
+      <button class="reroll" title="Randomize this day">🔄</button>
     `;
+    li.querySelector(".day-select").onchange = (e) => setDay(i, e.target.value);
     li.querySelector(".reroll").onclick = () => rerollDay(i);
+    list.appendChild(li);
+  });
+}
+
+function groceryItems() {
+  const seen = new Map(); // lowercase name -> display name
+  currentPlan.forEach(name => {
+    const meal = mealByName(name);
+    if (!meal) return;
+    (meal.ingredients || []).forEach(ing => {
+      const key = ing.trim().toLowerCase();
+      if (!seen.has(key)) seen.set(key, ing.trim());
+    });
+  });
+  return [...seen.values()].sort((a, b) => a.localeCompare(b));
+}
+
+function togglePantryItem(name) {
+  pantry[name] = !pantry[name];
+  saveState();
+  renderGroceryList();
+}
+
+function renderGroceryList() {
+  const list = document.getElementById("grocery-list");
+  const empty = document.getElementById("no-groceries");
+  const items = groceryItems();
+  list.innerHTML = "";
+  empty.style.display = items.length === 0 ? "block" : "none";
+  items.forEach(name => {
+    const have = !!pantry[name];
+    const li = document.createElement("li");
+    if (have) li.className = "have";
+    const id = `grocery-${name.replace(/\s+/g, "-").toLowerCase()}`;
+    li.innerHTML = `
+      <input type="checkbox" id="${id}" ${have ? "checked" : ""}>
+      <label for="${id}">${name}</label>
+    `;
+    li.querySelector("input").onchange = () => togglePantryItem(name);
     list.appendChild(li);
   });
 }
@@ -296,6 +353,7 @@ document.getElementById("plan-btn").onclick = () => {
   pickWeek();
   saveState();
   renderPlan();
+  renderGroceryList();
   renderStats();
 };
 document.getElementById("surprise-btn").onclick = surpriseMe;
