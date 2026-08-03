@@ -392,10 +392,69 @@
     color: var(--muted);
     margin: 0 0 8px;
   }
+
+  #signin-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 100;
+  }
+  .signin-card {
+    text-align: center;
+    max-width: 340px;
+  }
+  .signin-card p {
+    color: var(--muted);
+    font-weight: 600;
+    margin: 0 0 20px;
+  }
+  #signin-error {
+    color: #d64545;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 14px;
+  }
+  #app-content { display: none; }
+  #signout-row {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 4px 16px 0;
+    text-align: center;
+  }
+  #signout-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 10px;
+  }
 </style>
 </head>
 <body>
 
+<div id="signin-overlay">
+  <div class="signin-card">
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 2v7M4 2v5a1 1 0 001 1h0M10 2v5a1 1 0 01-1 1h0M7 10v12" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 2c-2 1-3 3-3 6 0 2 1 3 2 3.5V22" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>What's for Dinner?</h1>
+    <p>Sign in to sync your household's plan.</p>
+    <button class="primary" id="google-signin-btn">Sign in with Google</button>
+    <p id="signin-error" style="display:none;"></p>
+  </div>
+</div>
+
+<div id="app-content">
 <header>
   <div class="badge">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -454,8 +513,13 @@
     </div>
   </section>
 </main>
+</div>
+
+<div id="signout-row" style="display:none;">
+  <button id="signout-btn">Sign out</button>
+</div>
 
 <script src="meals.js"></script>
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>

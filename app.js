@@ -1,5 +1,28 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult,
+  onAuthStateChanged, signOut,
+} from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
+import {
+  initializeFirestore, persistentLocalCache, doc, onSnapshot, setDoc,
+} from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCR0Mneiw5YLW3V2OUqGsRSJhffFWkvl6I",
+  authDomain: "whats-for-dinner-fdb62.firebaseapp.com",
+  projectId: "whats-for-dinner-fdb62",
+  storageBucket: "whats-for-dinner-fdb62.firebasestorage.app",
+  messagingSenderId: "741494061442",
+  appId: "1:741494061442:web:0f4e808980400c64daf79b",
+};
+const ALLOWED_EMAILS = ["cras.shunter1@gmail.com", "k.nosakhere@yahoo.com"];
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = initializeFirestore(fbApp, { localCache: persistentLocalCache() });
+const stateDocRef = doc(db, "households", "main");
+
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const STORAGE_KEY = "meal-planner-state-v2";
 
 let activeMoods = new Set();
 let favoritesOnly = false;
@@ -8,22 +31,31 @@ let favorites = new Set();
 let ratings = {};   // name -> 1..5
 let leftovers = []; // { id, name, servings, loggedAt }
 let history = {};   // name -> times planned
+let applyingRemote = false; // true while an incoming snapshot is being applied
 
-function loadState() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    if (Array.isArray(saved.moods)) activeMoods = new Set(saved.moods);
-    if (Array.isArray(saved.plan) && saved.plan.length === 7) currentPlan = saved.plan;
-    if (typeof saved.favoritesOnly === "boolean") favoritesOnly = saved.favoritesOnly;
-    if (Array.isArray(saved.favorites)) favorites = new Set(saved.favorites);
-    if (saved.ratings && typeof saved.ratings === "object") ratings = saved.ratings;
-    if (Array.isArray(saved.leftovers)) leftovers = saved.leftovers;
-    if (saved.history && typeof saved.history === "object") history = saved.history;
-  } catch (e) { /* ignore corrupt state */ }
+function stateFromSnapshot(data) {
+  applyingRemote = true;
+  activeMoods = new Set(data.moods || []);
+  currentPlan = Array.isArray(data.plan) && data.plan.length === 7 ? data.plan : [];
+  favoritesOnly = !!data.favoritesOnly;
+  favorites = new Set(data.favorites || []);
+  ratings = data.ratings || {};
+  leftovers = data.leftovers || [];
+  history = data.history || {};
+  if (currentPlan.length !== 7) pickWeek();
+  renderMoodChips();
+  renderPlan();
+  renderLeftoverSelect();
+  renderLeftovers();
+  renderAllMeals();
+  renderStats();
+  toggleEmptyState();
+  applyingRemote = false;
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+  if (applyingRemote) return; // don't echo back a change we just received
+  setDoc(stateDocRef, {
     moods: [...activeMoods],
     plan: currentPlan,
     favoritesOnly,
@@ -31,7 +63,7 @@ function saveState() {
     ratings,
     leftovers,
     history,
-  }));
+  }).catch(err => console.error("Sync write failed:", err));
 }
 
 function filteredMeals() {
@@ -278,17 +310,67 @@ document.getElementById("save-leftover-btn").onclick = () => {
   document.getElementById("leftover-form").classList.remove("open");
 };
 
-loadState();
-if (currentPlan.length !== 7) pickWeek();
-renderMoodChips();
-renderPlan();
-renderLeftoverSelect();
-renderLeftovers();
-renderAllMeals();
-renderStats();
-toggleEmptyState();
-saveState();
-
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
+
+// --- Auth gating + Firestore sync ---
+
+const signinOverlay = document.getElementById("signin-overlay");
+const appContent = document.getElementById("app-content");
+const signoutRow = document.getElementById("signout-row");
+const signinError = document.getElementById("signin-error");
+
+function showSignedOut(message) {
+  signinOverlay.style.display = "flex";
+  appContent.style.display = "none";
+  signoutRow.style.display = "none";
+  if (message) {
+    signinError.textContent = message;
+    signinError.style.display = "block";
+  }
+}
+
+function showSignedIn() {
+  signinOverlay.style.display = "none";
+  appContent.style.display = "block";
+  signoutRow.style.display = "block";
+}
+
+document.getElementById("google-signin-btn").onclick = () => {
+  signInWithRedirect(auth, new GoogleAuthProvider());
+};
+document.getElementById("signout-btn").onclick = () => signOut(auth);
+
+let unsubscribeSnapshot = null;
+
+getRedirectResult(auth).catch(err => {
+  showSignedOut(`Sign-in failed: ${err.message}`);
+});
+
+onAuthStateChanged(auth, user => {
+  if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
+
+  if (!user) {
+    showSignedOut();
+    return;
+  }
+  if (!ALLOWED_EMAILS.includes(user.email)) {
+    signOut(auth);
+    showSignedOut(`${user.email} isn't authorized for this household.`);
+    return;
+  }
+
+  showSignedIn();
+  unsubscribeSnapshot = onSnapshot(stateDocRef, snap => {
+    if (snap.exists()) {
+      stateFromSnapshot(snap.data());
+    } else {
+      // first ever sign-in: seed the shared document
+      pickWeek();
+      saveState();
+    }
+  }, err => {
+    console.error("Sync read failed:", err);
+  });
+});
