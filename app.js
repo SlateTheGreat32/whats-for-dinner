@@ -155,7 +155,18 @@ function setRating(name, stars) {
 }
 
 function addLeftover(name, servings) {
-  leftovers.push({ id: `${name}-${Math.random().toString(36).slice(2, 8)}`, name, servings, loggedAt: Date.now() });
+  leftovers.push({
+    id: `${name}-${Math.random().toString(36).slice(2, 8)}`,
+    name, servings, loggedAt: Date.now(), status: "available",
+  });
+  saveState();
+  renderLeftovers();
+}
+
+function toggleLeftoverStatus(id) {
+  const item = leftovers.find(l => l.id === id);
+  if (!item) return;
+  item.status = item.status === "eaten" ? "available" : "eaten";
   saveState();
   renderLeftovers();
 }
@@ -314,12 +325,18 @@ function renderLeftovers() {
   list.innerHTML = "";
   empty.style.display = leftovers.length === 0 ? "block" : "none";
   leftovers.forEach(l => {
+    const eaten = l.status === "eaten";
     const li = document.createElement("li");
+    if (eaten) li.className = "eaten";
     li.innerHTML = `
       <span><strong>${l.name}</strong> — ${l.servings} serving${l.servings === 1 ? "" : "s"}</span>
-      <button class="clear-btn">Eaten</button>
+      <span class="leftover-actions">
+        <button class="status-toggle${eaten ? "" : " available"}">${eaten ? "Eaten" : "Available"}</button>
+        <button class="remove-btn" title="Remove">✕</button>
+      </span>
     `;
-    li.querySelector(".clear-btn").onclick = () => removeLeftover(l.id);
+    li.querySelector(".status-toggle").onclick = () => toggleLeftoverStatus(l.id);
+    li.querySelector(".remove-btn").onclick = () => removeLeftover(l.id);
     list.appendChild(li);
   });
 }

@@ -333,15 +333,37 @@
     font-size: 0.92rem;
   }
   #leftovers-list li:last-child { border-bottom: none; }
-  #leftovers-list .clear-btn {
-    background: var(--accent-soft);
-    color: var(--accent);
+  #leftovers-list li.eaten span:first-child {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .leftover-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .status-toggle {
+    background: var(--card-border);
+    color: var(--muted);
     border: none;
     padding: 6px 12px;
     border-radius: 999px;
     font-weight: 700;
     font-size: 0.78rem;
     cursor: pointer;
+  }
+  .status-toggle.available {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 6px 4px;
   }
   #no-leftovers {
     color: var(--muted);
