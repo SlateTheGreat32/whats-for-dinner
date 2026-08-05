@@ -54,6 +54,7 @@ function stateFromSnapshot(data) {
   renderStats();
   toggleEmptyState();
   applyingRemote = false;
+  cleanupOldLeftovers();
 }
 
 function saveState() {
@@ -166,9 +167,37 @@ function addLeftover(name, servings) {
 function toggleLeftoverStatus(id) {
   const item = leftovers.find(l => l.id === id);
   if (!item) return;
-  item.status = item.status === "eaten" ? "available" : "eaten";
+  if (item.status === "eaten") {
+    item.status = "available";
+    delete item.eatenAt;
+  } else {
+    item.status = "eaten";
+    item.eatenAt = Date.now();
+  }
   saveState();
   renderLeftovers();
+}
+
+function adjustServings(id, delta) {
+  const item = leftovers.find(l => l.id === id);
+  if (!item) return;
+  item.servings = Math.max(0, item.servings + delta);
+  if (item.servings === 0 && item.status !== "eaten") {
+    item.status = "eaten";
+    item.eatenAt = Date.now();
+  } else if (item.servings > 0 && item.status === "eaten") {
+    item.status = "available";
+    delete item.eatenAt;
+  }
+  saveState();
+  renderLeftovers();
+}
+
+function cleanupOldLeftovers() {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const before = leftovers.length;
+  leftovers = leftovers.filter(l => !(l.status === "eaten" && l.eatenAt && Date.now() - l.eatenAt > DAY_MS));
+  if (leftovers.length !== before) saveState();
 }
 
 function removeLeftover(id) {
@@ -329,12 +358,22 @@ function renderLeftovers() {
     const li = document.createElement("li");
     if (eaten) li.className = "eaten";
     li.innerHTML = `
-      <span><strong>${l.name}</strong> — ${l.servings} serving${l.servings === 1 ? "" : "s"}</span>
-      <span class="leftover-actions">
-        <button class="status-toggle${eaten ? "" : " available"}">${eaten ? "Eaten" : "Available"}</button>
+      <div class="leftover-top">
+        <strong>${l.name}</strong>
         <button class="remove-btn" title="Remove">✕</button>
-      </span>
+      </div>
+      <div class="leftover-bottom">
+        <span class="servings-stepper">
+          <button class="step-btn" data-delta="-1">−</button>
+          <span class="servings-count">${l.servings} serving${l.servings === 1 ? "" : "s"}</span>
+          <button class="step-btn" data-delta="1">+</button>
+        </span>
+        <button class="status-toggle${eaten ? "" : " available"}">${eaten ? "Eaten" : "Available"}</button>
+      </div>
     `;
+    li.querySelectorAll(".step-btn").forEach(btn => {
+      btn.onclick = () => adjustServings(l.id, parseInt(btn.dataset.delta, 10));
+    });
     li.querySelector(".status-toggle").onclick = () => toggleLeftoverStatus(l.id);
     li.querySelector(".remove-btn").onclick = () => removeLeftover(l.id);
     list.appendChild(li);
@@ -388,6 +427,9 @@ document.getElementById("save-leftover-btn").onclick = () => {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
+
+// Catches leftovers that finish aging out while the app is left open across a day boundary.
+setInterval(cleanupOldLeftovers, 30 * 60 * 1000);
 
 // --- Auth gating + Firestore sync ---
 

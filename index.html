@@ -325,23 +325,49 @@
     padding: 0;
   }
   #leftovers-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 10px 0;
     border-bottom: 1px solid var(--divider);
     font-size: 0.92rem;
   }
   #leftovers-list li:last-child { border-bottom: none; }
-  #leftovers-list li.eaten span:first-child {
+  #leftovers-list li.eaten strong {
     text-decoration: line-through;
     color: var(--muted);
   }
-  .leftover-actions {
+  .leftover-top {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .leftover-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .servings-stepper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1.5px solid var(--card-border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .servings-count {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 68px;
   }
   .status-toggle {
     background: var(--card-border);
@@ -352,6 +378,7 @@
     font-weight: 700;
     font-size: 0.78rem;
     cursor: pointer;
+    flex-shrink: 0;
   }
   .status-toggle.available {
     background: var(--accent-soft);
